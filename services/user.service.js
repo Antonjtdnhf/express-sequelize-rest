@@ -6,31 +6,19 @@ class UserService {
     }
 
     createUser(user) {
-        return this.User.create(user)
-            .then((newUser) => newUser)
-            .catch((err) => {
-                throw err;
-            });
+        return this.User.create(user);
     }
 
-    async findAllUsers() {
+    findAllUsers() {
         return this.User.findAll();
     }
 
     findUser(userId) {
-        return this.User.findByPk(userId)
-            .then((user) => user)
-            .catch((err) => {
-                throw new Error(err.message);
-            });
+        return this.User.findByPk(userId);
     }
 
     deleteUser(userId) {
-        return this.User.destroy({ where: { id: userId } })
-            .then((code) => code)
-            .catch((err) => {
-                throw new Error(err.message);
-            });
+        return this.User.destroy({ where: { id: userId } });
     }
 }
 

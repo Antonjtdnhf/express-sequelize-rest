@@ -1,36 +1,48 @@
 const PostService = require('../services/post.service');
 
 exports.getAllPosts = (req, res, next) => {
-    const posts = PostService.findAllPosts()
-        .then((data) => data)
-        .catch((err) => {
-            next(err);
-        });
-    if (posts) res.status(200).json(posts);
+    try {
+        PostService.findAllPosts()
+            .then((posts) => {
+                if (posts) res.status(200).json(posts);
+            })
+            .catch((err) => {
+                next(err);
+            });
+    } catch (err) {
+        next(err);
+    }
 };
 
 exports.getPost = (req, res, next) => {
-    const { postId } = req.params;
-    PostService.findPost(postId)
-        .then((post) => {
-            if (post) {
+    try {
+        const { postId } = req.params;
+        PostService.findPost(postId)
+            .then((post) => {
+                if (!post) {
+                    throw new Error('No such post');
+                }
                 res.status(200).json(post);
-            }
-            throw new Error('No such post');
-        })
-        .catch((err) => {
-            next(err);
-        });
+            })
+            .catch((err) => {
+                next(err);
+            });
+    } catch (err) {
+        next(err);
+    }
 };
 
 exports.createPost = (req, res, next) => {
     try {
-        const { content } = req.body;
-        console.log('body', content);
-        const createdPost = PostService.createPost({ content });
-
-        if (!createdPost) throw new Error('Could not create post');
-        res.status(200).json(createdPost);
+        const { content, userId } = req.body;
+        PostService.createPost({ content, userId })
+            .then((createdPost) => {
+                if (!createdPost) throw new Error('Could not create post');
+                res.status(200).json(createdPost);
+            })
+            .catch((err) => {
+                next(err);
+            });
     } catch (err) {
         next(err);
     }
@@ -39,11 +51,16 @@ exports.createPost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     try {
         const { postId } = req.params;
-        const deletionCode = PostService.deletePost(postId);
-        if (+deletionCode) {
-            res.status(200).send('Post deleted successfully');
-        }
-        throw new Error(`Could not delete post ${postId}`);
+        PostService.deletePost(postId)
+            .then((deletionCode) => {
+                if (!Number(deletionCode)) {
+                    throw new Error(`Could not delete post ${postId}`);
+                }
+                res.status(200).send('Post deleted successfully');
+            })
+            .catch((err) => {
+                next(err);
+            });
     } catch (err) {
         next(err);
     }

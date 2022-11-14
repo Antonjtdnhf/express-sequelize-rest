@@ -13,7 +13,7 @@ class PostService {
             });
     }
 
-    async findAllPosts() {
+    findAllPosts() {
         return this.Post.findAll();
     }
 
