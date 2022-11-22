@@ -1,25 +1,27 @@
-const { User } = require('../models');
+const UserRepository = require('../repositories/user.repository');
 
 class UserService {
-    constructor(model) {
-        this.User = model;
+    #UserRepository = undefined;
+
+    constructor(userRepo) {
+        this.#UserRepository = userRepo;
     }
 
     createUser(user) {
-        return this.User.create(user);
+        return this.#UserRepository.createUser(user);
     }
 
     findAllUsers() {
-        return this.User.findAll();
+        return this.#UserRepository.findAllUsers();
     }
 
     findUser(userId) {
-        return this.User.findByPk(userId);
+        return this.#UserRepository.findUser(userId);
     }
 
     deleteUser(userId) {
-        return this.User.destroy({ where: { id: userId } });
+        return this.#UserRepository.deleteUser(userId);
     }
 }
 
-module.exports = new UserService(User);
+module.exports = new UserService(UserRepository);

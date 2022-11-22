@@ -1,37 +1,27 @@
-const { Comment } = require('../models');
+const CommentRepository = require('../repositories/comment.repository');
 
 class CommentService {
-    constructor(model) {
-        this.Comment = model;
+    #CommentRepository = undefined;
+
+    constructor(commentRepo) {
+        this.#CommentRepository = commentRepo;
     }
 
     createComment(comment) {
-        return this.Comment.create(comment)
-            .then((newComment) => newComment)
-            .catch((err) => {
-                throw err;
-            });
+        return this.#CommentRepository.createComment(comment);
     }
 
     findAllComments() {
-        return this.Comment.findAll();
+        return this.#CommentRepository.findAllComments();
     }
 
     findComment(commentId) {
-        return this.Comment.findByPk(commentId)
-            .then((comment) => comment)
-            .catch((err) => {
-                throw new Error(err.message);
-            });
+        return this.#CommentRepository.findComment(commentId);
     }
 
     deleteComment(commentId) {
-        return this.Comment.destroy({ where: { id: commentId } })
-            .then((code) => code)
-            .catch((err) => {
-                throw new Error(err.message);
-            });
+        return this.#CommentRepository.deleteComment(commentId);
     }
 }
 
-module.exports = new CommentService(Comment);
+module.exports = new CommentService(CommentRepository);

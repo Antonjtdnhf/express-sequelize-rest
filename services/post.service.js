@@ -1,37 +1,27 @@
-const { Post } = require('../models');
+const PostRepository = require('../repositories/post.repository');
 
 class PostService {
-    constructor(model) {
-        this.Post = model;
+    #PostRepository = undefined;
+
+    constructor(PostRepo) {
+        this.#PostRepository = PostRepo;
     }
 
     createPost(post) {
-        return this.Post.create(post)
-            .then((newPost) => newPost)
-            .catch((err) => {
-                throw err;
-            });
+        return this.#PostRepository.createPost(post);
     }
 
     findAllPosts() {
-        return this.Post.findAll();
+        return this.#PostRepository.findAllPosts();
     }
 
     findPost(postId) {
-        return this.Post.findByPk(postId)
-            .then((post) => post)
-            .catch((err) => {
-                throw new Error(err.message);
-            });
+        return this.#PostRepository.findPost(postId);
     }
 
     deletePost(postId) {
-        return this.Post.destroy({ where: { id: postId } })
-            .then((code) => code)
-            .catch((err) => {
-                throw new Error(err.message);
-            });
+        return this.#PostRepository.deletePost(postId);
     }
 }
 
-module.exports = new PostService(Post);
+module.exports = new PostService(PostRepository);
