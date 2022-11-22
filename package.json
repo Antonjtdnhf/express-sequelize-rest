@@ -44,6 +44,9 @@
             "prettier",
             "plugin:node/recommended"
         ],
+        "parserOptions": {
+            "ecmaVersion": 13
+        },
         "plugins": [
             "prettier"
         ]
